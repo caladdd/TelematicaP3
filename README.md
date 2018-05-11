@@ -24,6 +24,14 @@ import re
 
 udf_cleantext = udf(cleanup_text , ArrayType(StringType()))
 clean_text = rawdata.withColumn("words", udf_cleantext(struct([rawdata[x] for x in rawdata.columns])))
-
 clean_text.show(10)
+
+from pyspark.ml.feature import CountVectorizer
+from pyspark.ml.feature import HashingTF, IDF, Tokenizer
+
+
+from pyspark.ml.clustering import LDA
+from pyspark.ml.linalg import Vectors, SparseVector
 ```
+[Spark](http://spark.apache.org/docs/2.2.0/api/python/_modules/pyspark/ml/clustering.html)
+
