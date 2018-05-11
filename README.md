@@ -14,9 +14,9 @@
 > user@master$ pyspark
 
 
->from pyspark.sql.functions import col, udf, struct
->from pyspark.sql.types import *
->import re
+        from pyspark.sql.functions import col, udf, struct
+        from pyspark.sql.types import *
+        import re
 
 >from pyspark.ml.feature import CountVectorizer
 >from pyspark.ml.feature import HashingTF, IDF, Tokenizer
