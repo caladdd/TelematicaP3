@@ -1,6 +1,6 @@
 def cleanup_text(record):
     text  = record[8]
-    uid   = record[9]
+    #uid   = record[9]
     words = text.split()
     
     # Default list of Stopwords
