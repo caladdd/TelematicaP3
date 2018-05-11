@@ -18,15 +18,15 @@
         from pyspark.sql.types import *
         import re
 
->from pyspark.ml.feature import CountVectorizer
->from pyspark.ml.feature import HashingTF, IDF, Tokenizer
->from pyspark.ml.clustering import LDA
->from pyspark.ml.linalg import Vectors, SparseVector
+        from pyspark.ml.feature import CountVectorizer
+        from pyspark.ml.feature import HashingTF, IDF, Tokenizer
+        from pyspark.ml.clustering import LDA
+        from pyspark.ml.linalg import Vectors, SparseVector
 
 ### carga de datos a pyspark
 
-> rawdata = spark.read.load("hdfs:///user/jcaladh/datasets/airlines.csv",format="csv", header=True)
-> rawdata.show(10)
+        rawdata = spark.read.load("hdfs:///user/jcaladh/datasets/airlines.csv",format="csv", header=True)
+        rawdata.show(10)
 
 ### Pre-procesamiento
 
