@@ -11,8 +11,8 @@
 
 * iniciar pyspark
 
-    user@hdpmaster$  pyspark
-    exec(open("/home/jcaladh/top-telematica/TelematicaP3/Topics_in_reviews.py").read())
+        user@hdpmaster$  pyspark
+        exec(open("/home/jcaladh/top-telematica/TelematicaP3/Topics_in_reviews.py").read())
 
 <!--
 https://github.com/zaratsian/Spark/blob/master/text_analytics_datadriven_topics.py 
