@@ -8,7 +8,7 @@ ldamodel.vocabSize()
  
 ldatopics = ldamodel.describeTopics()
 # Show the top 25 Topics
-ldatopics.show(25)
+#ldatopics.show(25)
 
 def map_termID_to_Word(termIndices):
     words = []
@@ -23,4 +23,4 @@ ldatopics_mapped.select(ldatopics_mapped.topic, ldatopics_mapped.topic_desc).sho
 
 ldaResults = ldamodel.transform(rescaledData)
 
-ldaResults.show()
+#ldaResults.show()
