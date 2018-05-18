@@ -32,17 +32,20 @@
 
 * Correr lo de Pre-processing.py y luego lo siguente:
 
-    udf_cleantext = udf(cleanup_text , ArrayType(StringType()))
-    clean_text = rawdata.withColumn("words", udf_cleantext(struct([rawdata[x] for x in rawdata.columns])))
+    exec(open("/home/jcaladh/top-telematica/TelematicaP3/Pre-processing.py").read())
 
 
 ### Generación de TF-IDF (Term Frequency Inverse Document Frequency)
 
 * Correr lo de Tf-idf.py
 
+    exec(open("/home/jcaladh/top-telematica/TelematicaP3/Tf-idf.py").read())
+
 ### Use LDA to Cluster the TF-IDF Matrix
 
 * Correr lo de Lda.py
+
+    exec(open("/home/jcaladh/top-telematica/TelematicaP3/Lda.py").read())
 <!--
 https://github.com/zaratsian/Spark/blob/master/text_analytics_datadriven_topics.py 
 -->

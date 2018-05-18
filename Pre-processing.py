@@ -1,3 +1,5 @@
+
+
 def cleanup_text(record):
     text  = record[8]
     words = text.split()
@@ -32,4 +34,6 @@ def cleanup_text(record):
     text_out = [re.sub('[^a-zA-Z0-9]','',word) for word in words]                                       # Remove special characters
     text_out = [word.lower() for word in text_out if len(word)>2 and word.lower() not in stopwords]     # Remove stopwords and words under X length
     return text_out
- 
+
+udf_cleantext = udf(cleanup_text , ArrayType(StringType()))
+clean_text = rawdata.withColumn("words", udf_cleantext(struct([rawdata[x] for x in rawdata.columns])))
