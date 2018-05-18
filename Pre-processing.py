@@ -1,9 +1,8 @@
 def cleanup_text(record):
     text  = record[8]
-    #uid   = record[9]
     words = text.split()
     
-    # Default list of Stopwords
+    # Lista de Stopwords por defecto
     stopwords_core = ['a', u'about', u'above', u'after', u'again', u'against', u'all', u'am', u'an', u'and', u'any', u'are', u'arent', u'as', u'at', 
     u'be', u'because', u'been', u'before', u'being', u'below', u'between', u'both', u'but', u'by', 
     u'can', 'cant', 'come', u'could', 'couldnt', 
@@ -34,5 +33,3 @@ def cleanup_text(record):
     text_out = [word.lower() for word in text_out if len(word)>2 and word.lower() not in stopwords]     # Remove stopwords and words under X length
     return text_out
  
-#udf_cleantext = udf(cleanup_text , ArrayType(StringType()))
-#clean_text = rawdata.withColumn("words", udf_cleantext(struct([rawdata[x] for x in rawdata.columns])))
