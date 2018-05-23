@@ -45,3 +45,5 @@ If confronted with the token saw, stemming might return just s, whereas lemmatiz
 [5] https://edlab.tc.columbia.edu/blog/13139-Topic-Modeling-with-LDA-in-NLP-data-mining-in-Pressible 
 
 [6] https://nlp.stanford.edu/IR-book/html/htmledition/stemming-and-lemmatization-1.html 
+
+[7] https://wordnet.princeton.edu/ 
