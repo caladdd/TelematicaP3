@@ -32,6 +32,8 @@ Lemmatization refers to a similar process, but doing things properly with the us
 
 If confronted with the token saw, stemming might return just s, whereas lemmatization would attempt to return either see or saw depending on whether the use of the token was as a verb or a noun [6].
 
+Modern lemmatization algorithms are used through external libraries, the most common ones being NLTK's [7] and Stanford's CoreNLP [8]. NLTK's is implemented based on Princeton University's WordNet [9, 10], a lexical database for English. Since this project is implemented using a third party cluster, we are unable to install any such libraries. We had to write our own algorithm, so we went for something a little bit different: stemming algorithms. In our case we chose to implement the original Porter's Algorithm, which can be found in the author's webpage [11] and is also available in NLTK [12].
+
 # References
 
 [1] https://cran.r-project.org/web/packages/tidytext/vignettes/tf_idf.html 
@@ -46,4 +48,15 @@ If confronted with the token saw, stemming might return just s, whereas lemmatiz
 
 [6] https://nlp.stanford.edu/IR-book/html/htmledition/stemming-and-lemmatization-1.html 
 
-[7] https://wordnet.princeton.edu/ 
+[7] http://www.nltk.org/ 
+
+[8] https://stanfordnlp.github.io/CoreNLP/ 
+
+[9] https://wordnet.princeton.edu/ 
+
+[10] https://github.com/nltk/nltk/blob/develop/nltk/stem/wordnet.py 
+
+[11] https://tartarus.org/martin/PorterStemmer/ 
+
+[12] https://github.com/nltk/nltk/blob/develop/nltk/stem/porter.py 
+
