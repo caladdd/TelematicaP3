@@ -25,9 +25,13 @@ Repeat 1 and 2 until every single word was matched with a topic in the document.
 # References
 
 [1] https://cran.r-project.org/web/packages/tidytext/vignettes/tf_idf.html 
+
 [2] https://en.wikipedia.org/wiki/Tf%E2%80%93idf
+
 [3] https://rstudio-pubs-static.s3.amazonaws.com/79360_850b2a69980c4488b1db95987a24867a.html 
+
 [4] https://en.wikipedia.org/wiki/Topic_model 
+
 [5] https://edlab.tc.columbia.edu/blog/13139-Topic-Modeling-with-LDA-in-NLP-data-mining-in-Pressible 
 
 
