@@ -22,6 +22,16 @@ Take a topic from a document
 Take a word from the chosen topic from 1
 Repeat 1 and 2 until every single word was matched with a topic in the document.
 
+# Stemming and lemmatization
+
+For grammatical reasons, documents use different forms of the same word, such as organize, organizes, and organizing. Additionally, there are families of derivationally related words with similar meanings, such as democracy, democratic, and democratization. In many situations, it seems as if it would be useful for a search for one of these words to return documents that contain another word in the set. The goal of both stemming and lemmatization is to reduce inflectional forms and sometimes derivationally related forms of a word to a common base form [6]. 
+
+Stemming refers to a heuristic process that chops off the ends of words in the hope of achieving this goal correctly most of the time, and often includes the removal of derivational affixes [6]. 
+
+Lemmatization refers to a similar process, but doing things properly with the use of a vocabulary and morphological analysis of words, normally aiming to remove inflectional endings only and to return the base or dictionary form of a word, which is known as the lemma [6].
+
+If confronted with the token saw, stemming might return just s, whereas lemmatization would attempt to return either see or saw depending on whether the use of the token was as a verb or a noun [6].
+
 # References
 
 [1] https://cran.r-project.org/web/packages/tidytext/vignettes/tf_idf.html 
@@ -34,4 +44,4 @@ Repeat 1 and 2 until every single word was matched with a topic in the document.
 
 [5] https://edlab.tc.columbia.edu/blog/13139-Topic-Modeling-with-LDA-in-NLP-data-mining-in-Pressible 
 
-
+[6] https://nlp.stanford.edu/IR-book/html/htmledition/stemming-and-lemmatization-1.html 
