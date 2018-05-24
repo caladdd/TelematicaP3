@@ -8,7 +8,6 @@ from pyspark.ml.clustering import LDA
 import sys
 
 
-
 def main():
     # validate input
     if len(sys.argv) != 4:
@@ -25,15 +24,18 @@ def main():
     # load data
     raw_data = spark.read.load(input_path, format="csv", header=True)
 
-    # preprocessing: normalize to lowercase only (and 's), remove stop words and perform stemming using the original 
+    # preprocessing: normalize to lowercase only (and 's), remove stop words and perform stemming using the original
     # Porter's Stemming Algorithm
     udf_cleanup_text = udf(cleanup_text, ArrayType(StringType()))
-    pre_clean_text = raw_data.withColumn("words", udf_cleanup_text(struct([raw_data[x] for x in raw_data.columns])))
-    stop_words_remover = StopWordsRemover(inputCol="words", outputCol="clean_words")
+    pre_clean_text = raw_data.withColumn("words", udf_cleanup_text(
+        struct([raw_data[x] for x in raw_data.columns])))
+    stop_words_remover = StopWordsRemover(
+        inputCol="words", outputCol="clean_words")
     clean_text = stop_words_remover.transform(pre_clean_text)
 
     # generate TF-IDF matrix
-    cv = CountVectorizer(inputCol="clean_words", outputCol="raw_features", vocabSize=1000)
+    cv = CountVectorizer(inputCol="clean_words",
+                         outputCol="raw_features", vocabSize=1000)
     cv_model = cv.fit(clean_text)
     featurized_data = cv_model.transform(clean_text)
     vocab = cv_model.vocabulary
@@ -41,15 +43,18 @@ def main():
     idf = IDF(inputCol="raw_features", outputCol="features")
     idf_model = idf.fit(featurized_data)
     rescaled_data = idf_model.transform(featurized_data)
-    
+
     # generate k data-driven topics using LDA (Latent Dirichlet Allocation) to cluster the TF-IDF matrix
     lda = LDA(k=k, seed=k, featuresCol="features")
     lda_model = lda.fit(rescaled_data)
     lda_topics = lda_model.describeTopics()
-    udf_map_termId_to_word = udf(lambda term_indices: [vocab_broadcast.value[termId] for termId in term_indices], ArrayType(StringType()))
-    lda_topics_mapped = lda_topics.withColumn("topic_desc", udf_map_termId_to_word(lda_topics.termIndices))
+    udf_map_termId_to_word = udf(lambda term_indices: [
+                                 vocab_broadcast.value[termId] for termId in term_indices], ArrayType(StringType()))
+    lda_topics_mapped = lda_topics.withColumn(
+        "topic_desc", udf_map_termId_to_word(lda_topics.termIndices))
     # print topics found
-    topics = lda_topics_mapped.select(lda_topics_mapped.topic, lda_topics_mapped.topic_desc)
+    topics = lda_topics_mapped.select(
+        lda_topics_mapped.topic, lda_topics_mapped.topic_desc)
     topics.show(k, False)
 
     # clean
@@ -63,16 +68,17 @@ def main():
 
     # append topic percent columns
     for i in range(k):
-        f = udf(lambda l : "{0:.4f}".format(l[i]), StringType())
-        lda_results = lda_results.withColumn("topic" + str(i), f(lda_results["topicDistribution"]))
+        f = udf(lambda l: "{0:.4f}".format(l[i]), StringType())
+        lda_results = lda_results.withColumn(
+            "topic" + str(i), f(lda_results["topicDistribution"]))
 
     # clean
     lda_results = lda_results.drop("features")
     lda_results = lda_results.drop("topicDistribution")
-    
-    # save output to file
-    lda_results.write.format("com.databricks.spark.csv").option("header", "true").save(output_path);
 
+    # save output to file
+    lda_results.write.format("com.databricks.spark.csv").option(
+        "header", "true").save(output_path)
 
 
 def lowercase_only(str):
@@ -85,14 +91,12 @@ def lowercase_only(str):
     return s
 
 
-
 def cleanup_text(record):
     text = record[8]
     output = [lowercase_only(token) for token in text.split()]
     ps = PorterStemmer()
     output = [ps.stem(word) for word in output if len(word) > 2]
     return output
-
 
 
 """Porter Stemming Algorithm
@@ -505,7 +509,6 @@ class PorterStemmer:
         self.step4()
         self.step5()
         return self.b[self.k0:self.k+1]
-
 
 
 if __name__ == "__main__":
