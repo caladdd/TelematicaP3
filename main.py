@@ -1,9 +1,8 @@
 from pyspark import SparkContext
 from pyspark.sql import SparkSession
 from pyspark.sql.types import ArrayType, StringType
-from pyspark.sql.functions import col, udf, struct, format_number
-from pyspark.ml.feature import CountVectorizer, HashingTF, IDF, Tokenizer, StopWordsRemover
-from pyspark.ml.linalg import Vectors, SparseVector
+from pyspark.sql.functions import udf, struct
+from pyspark.ml.feature import CountVectorizer, IDF, StopWordsRemover
 from pyspark.ml.clustering import LDA
 
 import sys
@@ -12,19 +11,22 @@ import sys
 
 def main():
     # validate input
-    if len(sys.argv) != 2:
-        print("Usage: spark-submit main.py <input-file-full-path>")
+    if len(sys.argv) != 4:
+        print("Usage: spark-submit main.py <number-of-topics> <input-file-full-path> <output-file-full-path>")
         sys.exit(1)
 
     # init
     spark = SparkSession.builder.appName("TelematicaP3").getOrCreate()
     sc = spark.sparkContext
+    k = int(sys.argv[1])
+    input_path = sys.argv[2]
+    output_path = sys.argv[3]
 
     # load data
-    raw_data = spark.read.load(sys.argv[1], format="csv", header=True)
+    raw_data = spark.read.load(input_path, format="csv", header=True)
 
-    # preprocessing: normalize to lowercase only, remove stop words and perform stemming
-    # using the original Porter's Stemming Algorithm
+    # preprocessing: normalize to lowercase only (and 's), remove stop words and perform stemming using the original 
+    # Porter's Stemming Algorithm
     udf_cleanup_text = udf(cleanup_text, ArrayType(StringType()))
     pre_clean_text = raw_data.withColumn("words", udf_cleanup_text(struct([raw_data[x] for x in raw_data.columns])))
     stop_words_remover = StopWordsRemover(inputCol="words", outputCol="clean_words")
@@ -40,30 +42,36 @@ def main():
     idf_model = idf.fit(featurized_data)
     rescaled_data = idf_model.transform(featurized_data)
     
-    # generate 25 data-driven topics using LDA (Latent Dirichlet Allocation) to cluster the
-    # TF-IDF matrix. "em" = expectation-maximization
-    lda = LDA(k=25, seed=25, optimizer="em", featuresCol="features")
+    # generate k data-driven topics using LDA (Latent Dirichlet Allocation) to cluster the TF-IDF matrix
+    lda = LDA(k=k, seed=k, featuresCol="features")
     lda_model = lda.fit(rescaled_data)
-    lda_model.isDistributed()
-    lda_model.vocabSize()
     lda_topics = lda_model.describeTopics()
-    udf_map_termId_to_word = udf(lambda term_indices: [
-        vocab_broadcast.value[termId] for termId in term_indices], ArrayType(StringType()))
-    lda_topics_mapped = lda_topics.withColumn(
-        "topic_desc", udf_map_termId_to_word(lda_topics.termIndices))
-    df = lda_topics_mapped.select(lda_topics_mapped.topic,
-                            lda_topics_mapped.topic_desc)
-    df.show(25, False)
+    udf_map_termId_to_word = udf(lambda term_indices: [vocab_broadcast.value[termId] for termId in term_indices], ArrayType(StringType()))
+    lda_topics_mapped = lda_topics.withColumn("topic_desc", udf_map_termId_to_word(lda_topics.termIndices))
+    # print topics found
+    topics = lda_topics_mapped.select(lda_topics_mapped.topic, lda_topics_mapped.topic_desc)
+    topics.show(k, False)
+
+    # clean
+    rescaled_data = rescaled_data.drop("review")
+    rescaled_data = rescaled_data.drop("words")
+    rescaled_data = rescaled_data.drop("clean_words")
+    rescaled_data = rescaled_data.drop("raw_features")
+
+    # apply model
     lda_results = lda_model.transform(rescaled_data)
-    udf_array_to_truncated = udf(lambda l :  '[' + ','.join(["{0:.2f}".format(e) for e in l]) + ']', StringType())
-    lda_results = lda_results.withColumn("topicDistributionRound", udf_array_to_truncated(lda_results["topicDistribution"]))
-    # lda_results = lda_results.withColumn("topicDistributionRound", format_number(lda_results.topicDistribution, 3))
-    lda_results.show()
+
+    # append topic percent columns
+    for i in range(k):
+        f = udf(lambda l : "{0:.4f}".format(l[i]), StringType())
+        lda_results = lda_results.withColumn("topic" + str(i), f(lda_results["topicDistribution"]))
+
+    # clean
+    lda_results = lda_results.drop("features")
+    lda_results = lda_results.drop("topicDistribution")
     
-    # Save output to file
-    # udf_array_to_string = udf(lambda l :  '[' + ','.join([str(e) for e in l]) + ']', StringType())
-    # df = df.withColumn("topic_desc",udf_array_to_string(df["topic_desc"]))
-    # df.write.format("com.databricks.spark.csv").option("header", "true").save("hdfs:///user/" + user + "/outputTest");
+    # save output to file
+    lda_results.write.format("com.databricks.spark.csv").option("header", "true").save(output_path);
 
 
 
