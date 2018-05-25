@@ -1,9 +1,15 @@
 # Special Topics in Telematics - Project 3
 
+### Team
+
+- Catalina Patiño Forero
+- Juan Pablo Calad Henao
+- Mateo Agudelo Toro
+
 
 ### Dataset
 
-The dataset can be loaded into HDFS by running the following commands:
+The dataset can (this is just an *example*) be loaded into HDFS by running the following commands:
 
 > [\<user\>@hdpmaster ~] wget https://raw.githubusercontent.com/st0263eafit/bigdata20181/master/datasets/airlines.csv
 
@@ -14,10 +20,33 @@ The dataset can be loaded into HDFS by running the following commands:
 
 ### Execution
 
-First, make sure that the `user` variable in `main.py` matches your own \<user\>. Then, assuming that this repository's 
-files are stored in the `~/TelematicaP3/` folder, open `pyspark` and run the following inside of it
+The `main.py` file takes 3 parameters (in the given order):
 
-> \>\>\> exec(open("/home/\<user\>/TelematicaP3/main.py").read())
+- **k**: the number of topics to divide the dataset in.
+- **Input file**: the file to be processed.
+- **Output folder**: the folder to store the output (`.csv`) file. This folder must *not* exists before running this script.
+
+This program is design to be run on a Apache Spark cluster, so it should be sumbitted as a job. Example: 
+
+> spark-submit --master yarn main.py 25 hdfs:///user/\<user\>/datasets/airlines.csv hdfs:///user/\<user\>/outputTest > out.txt
+
+This will print the k - 25 in this case - topics and the keywords that compose each one of them to the out.txt file. Example:
+
+![Ejemplo Temas](/EjemploTemas.jpg) 
+
+And the new dataset (the actual output, in which k columns are added, each one containing the percentage of each topic contained 
+in that row's review) is output to the specified output folder. Example:
+
+![Ejemplo Output](/EjemploOutput.jpg) 
+
+This new `.csv` file provides valuable information aiming to the understanding of the reviews found in the dataset. 
+
+
+### Visualization
+
+The execution step prepares the data, processes it and then outputs a new dataset with new valuable data. This data can be used
+to perform an efficient analysis of the reviews found in the original dataset. As an example, we performed an *analysis of the 
+negative reviews* using Tableau that can be found in the `EjemploAnalisisTemasNegativos.pdf` file.
 
 
 ### References
