@@ -45,7 +45,7 @@ def main():
     rescaled_data = idf_model.transform(featurized_data)
 
     # generate k data-driven topics using LDA (Latent Dirichlet Allocation) to cluster the TF-IDF matrix
-    lda = LDA(k=k, seed=k, featuresCol="features")
+    lda = LDA(k=k, featuresCol="features")
     lda_model = lda.fit(rescaled_data)
     lda_topics = lda_model.describeTopics()
     udf_map_termId_to_word = udf(lambda term_indices: [
