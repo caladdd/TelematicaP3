@@ -24,11 +24,11 @@ The `main.py` file takes 3 parameters (in the given order):
 
 - **k**: the number of topics to divide the dataset in.
 - **Input file**: the file to be processed.
-- **Output folder**: the folder to store the output (`.csv`) file. This folder must *not* exist before running this script.
+- **Output folder**: the folder to store the output (`.csv`) file in. This folder must *not* exist before running this script.
 
 This program is designed to be run on an Spark cluster, so it should be sumbitted as a job. Example: 
 
-> spark-submit --master yarn main.py 25 hdfs:///user/\<user\>/datasets/airlines.csv hdfs:///user/\<user\>/outputTest > out.txt
+> [\<user\>@hdpmaster ~] spark-submit --master yarn main.py 25 hdfs:///user/\<user\>/datasets/airlines.csv hdfs:///user/\<user\>/outputTest > out.txt
 
 This will print the *k* (25 in this case) topics and the keywords that compose each one of them to the `out.txt` file. Example:
 
@@ -44,12 +44,12 @@ This new `.csv` file provides valuable information aiming to the understanding o
 
 ### Processing
 
-This part is actually divided in two: a *preprocessing* step and the *actual processing* step. Deeper information about all the 
-steps (in general) can be found in the `MarcoTeorico.md` file.
+This part is actually divided in two: a *preprocessing* step and the *actual processing* step. Deeper information about **all** the 
+steps can be found in the `MarcoTeorico.md` file.
 
 #### Preprocessing
 
-In this part is composed of three steps. Before starting, we want to point out that the preprocessing was done without the use 
+This part is composed of three steps. Before starting, we want to point out that the preprocessing was done without the use 
 of libraries other than the ones already available to pyspark in the cluster. Although this part could've been done locally, given 
 the (potential) size of the dataset, we decided to take advantage of the cluster's processing power (at the expense of being unable 
 to install new libraries, like we already mentioned).
@@ -57,7 +57,7 @@ to install new libraries, like we already mentioned).
 1. **Normalizing**: in this step we take away every non-alphabetic character (i.e. we take only the 26 letters contained in the 
 English alphabet). Then we make them all lowercase for easier processing. There is only one exception to this rule: the `'` 
 character (like in *wasn't* or *didn't*); we did this because the `'` is actually part of the language and Spark's ML StopWordsRemover 
-wouldn't recognize the former examples as stop words, when in fact they are (i.e. *wasnt* wasn't being recognized as a stop word, 
+wouldn't rule out words like the former examples, when in fact they are stop words (i.e. *wasnt* wasn't being recognized as a stop word, 
 whereas *wasn't* is)
 
 2. **Removing stop words**: in this step the stop words are removed from the reviews. This step is done by the Spark's ML 
@@ -65,14 +65,14 @@ StopWordsRemover. We initially wrote our own user defined function for this purp
 but given the problems imposed when trying to run multiple-file scripts on Spark we decided to go for an already written one. 
 
 3. **Stemming**: in this step the words are reduced to their common minimum form. This leads to words like *arriv* that could be found 
-in the original dataset as *arrive*, *arrived*, *arrives*, *arriving*, etc., which helps in the processing step. When doing the 
-research about this topic, we found about a more powerful technique called *lemmatization*, but we weren't unable to implement our 
+in the original dataset as *arrive*, *arrived*, *arrives*, *arriving*, etc., which helps in the processing step. During our 
+research about this topic, we found a more powerful technique called *lemmatization*, but we weren't unable to implement our 
 own, unlike the stemming algorithm (remember that given the approach we took, we couldn't install new libraries; more information 
 about this decision can be found in the `MarcoTeorico.md` file).
 
 #### Processing
 
-This part is also composed of three steps, and a usual (specially for this part), deeper information about all the steps (in general) 
+This part is also composed of three steps, and a usual (specially for this part), deeper information about **all** the steps  
 can be found in the `MarcoTeorico.md` file.
 
 1. **Generating the TF-IDF matrix**: short for term-frecuency inverse document frecuency matrix. It assigns a value to each word that appears
@@ -81,7 +81,7 @@ in the dataset with the purpose of assessing its significance (giving low values
 2. **Generating the LDA model**: is a method that infers topics from a collection of text documents. It takes the TF-IDF matrix as input.
 
 3. **Applying the LDA model**: once the LDA model is generated, it's applied to the original dataset. The output, for each review, is a 
-vector of *k* numbers, each one representing how much (as a percetage) each topic appears of the current review. The new dataset is
+vector of *k* numbers, each one representing how much (as a percetage) each topic appears in the current review. The new dataset is
 made by appending each element of this vector as columns.
 
 ### Visualization
