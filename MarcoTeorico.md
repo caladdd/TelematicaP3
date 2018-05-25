@@ -10,7 +10,7 @@ In the other hand, we have the inverse document frequency (IDF) which decreases 
 
 When we combine both measures we can calculate a term’s TF-IDF that represents how important a word is to a collection of documents [1].
 
-# LDA (Latent Dirichlet allocation)
+# LDA (Latent Dirichlet Allocation)
 
 Latent Dirichlet allocation (LDA) is a topic model that generates topics based on word frequency from a set of documents [3]. A topic model is a type of statistical model for discovering the abstract "topics" that occur in a collection of documents [4].
 
@@ -28,7 +28,7 @@ Spark's implementation [13, 14] offers quite a few options to create the LDA mod
 - **maxIter**: limit on the number of iterations.
 - **optimizer**: the optimizer used to perform the calculation. The options are `'em'` for *EM optimizer* and `'online'` for Online Variational Bayes LDA Algorithm.
 
-# Stemming and lemmatization
+# Stemming and Lemmatization
 
 For grammatical reasons, documents use different forms of the same word, such as *organize*, *organizes*, and *organizing*. Additionally, there are families of derivationally related words with similar meanings, such as *democracy*, *democratic*, and *democratization*. In many situations, it seems as if it would be useful for a search for one of these words to return documents that contain another word in the set. The goal of both stemming and lemmatization is to reduce inflectional forms and sometimes derivationally related forms of a word to a common base form [6]. 
 

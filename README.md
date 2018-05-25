@@ -9,13 +9,13 @@
 
 ### Dataset
 
-The dataset can (this is *just an example*) be loaded into HDFS by running the following commands:
+The dataset can (*this is just an example*) be loaded into HDFS by running the following commands:
 
 > [\<user\>@hdpmaster ~] wget https://raw.githubusercontent.com/st0263eafit/bigdata20181/master/datasets/airlines.csv
 
 > [\<user\>@hdpmaster ~] hdfs dfs -put ~/airlines.csv /user/\<user\>/datasets/
 
-> [\<user\>@hdpmaster ~] rm ~/airlines.csv # optional: remove the dataset from the local storage
+> [\<user\>@hdpmaster ~] rm ~/airlines.csv                      # optional: remove the dataset from the local storage
 
 
 ### Execution
@@ -44,7 +44,7 @@ This new `.csv` file provides valuable information to the understanding of the r
 
 ### Processing
 
-This part is actually divided in two: a *preprocessing* step and the actual *processing* step. Deeper information about **all** the 
+This part is actually divided into two: a *preprocessing* step and the actual *processing* step. Deeper information about **all** the 
 steps can be found in the `MarcoTeorico.md` file.
 
 #### Preprocessing
@@ -56,11 +56,11 @@ to install new libraries, like we already mentioned).
 
 1. **Normalizing**: in this step we take away every non-alphabetic character (i.e. we take only the 26 letters contained in the 
 English alphabet). Then we make them all lowercase for easier processing. There is only one exception to this rule: the `'` 
-character (like in *wasn't* or *didn't*); we did this because the `'` is actually part of the language and Spark's ML StopWordsRemover 
+character (like in *wasn't* or *didn't*); we did this because the `'` is actually part of the language and Spark ML's StopWordsRemover 
 wouldn't rule out words like the former examples when in fact they are stop words (i.e. *wasnt* wasn't being recognized as a stop word, 
 whereas *wasn't* is)
 
-2. **Removing stop words**: in this step the stop words are removed from the reviews. This step is done by the Spark's ML 
+2. **Removing stop words**: in this step the stop words are removed from the reviews. This step is done by the Spark ML's 
 StopWordsRemover. We initially wrote our own user defined function for this purpose with a custom external stop words dictionary, 
 but given the problems imposed when trying to run multiple-file scripts on Spark we decided to go for an already written one. 
 
@@ -78,7 +78,7 @@ can be found in the `MarcoTeorico.md` file.
 1. **Generating the TF-IDF matrix**: short for term-frecuency inverse document frecuency matrix. It assigns a value to each word that appears
 in the dataset with the purpose of assessing its significance (giving low values to common words and viceversa).
 
-2. **Generating the LDA model**: infers topics from a collection of text documents. It takes the TF-IDF matrix as input.
+2. **Generating the LDA model**: infers topics from a collection of text documents. Takes the TF-IDF matrix as input.
 
 3. **Applying the LDA model**: once the LDA model is generated, it's applied to the original dataset. The output, for each review, is a 
 vector of *k* numbers, each one representing how much (as a percetage) each topic appears in the current review. The new dataset is
