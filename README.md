@@ -95,7 +95,5 @@ file.
 ### References
 
 - [Spark Text Analytics - Uncovering Data-Driven Topics Tutorial](https://community.hortonworks.com/articles/84781/spark-text-analytics-uncovering-data-driven-topics.html)
-- [LDA Topic Modeling in Spark MLlib](https://zerogravitylabs.ca/lda-topic-modeling-spark-mllib/)
-- [SparkML Clustering](http://spark.apache.org/docs/2.2.0/api/python/_modules/pyspark/ml/clustering.html)
 - [Spark SQL](https://spark.apache.org/docs/latest/api/python/pyspark.sql.html)
 - [Reading command line arguments with python](https://stackoverflow.com/questions/1009860/how-to-read-process-command-line-arguments)
